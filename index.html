@@ -1,0 +1,117 @@
+
+          {currentAction && (
+            <div className="bg-blue-500/10 border border-blue-500/30 rounded-lg p-3 text-center">
+              <p className="text-sm text-blue-400">{currentAction}</p>
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            <button
+              onClick={resetAll}
+              disabled={isRunning}
+              className="flex-1 bg-gray-700 hover:bg-gray-600 disabled:bg-gray-800 px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition"
+            >
+              <RefreshCw className="w-4 h-4" />
+              RÃ©initialiser
+            </button>
+          </div>
+        </div>
+
+        {/* Numbers List */}
+        <div className="bg-black/40 backdrop-blur-md border border-red-500/30 rounded-xl p-6">
+          <h2 className="text-xl font-bold mb-4">
+            NumÃ©ros SurveillÃ©s ({numbers.length}/100)
+          </h2>
+          
+          {numbers.length === 0 ? (
+            <p className="text-gray-400 text-center py-8">Aucun numÃ©ro ajoutÃ©</p>
+          ) : (
+            <div className="space-y-2 max-h-96 overflow-y-auto">
+              {numbers.map(num => (
+                <div
+                  key={num.id}
+                  className="bg-gray-800/50 border border-gray-700 rounded-lg p-4 flex items-center justify-between"
+                >
+                  <div className="flex-1">
+                    <p className="font-mono font-semibold">{num.number}</p>
+                    <p className="text-xs text-gray-400">
+                      Ã‰tat: <span className={num.status.includes('bloquÃ©') ? 'text-red-400' : 'text-green-400'}>
+                        {num.status}
+                      </span> â€¢ Cycles: {num.cycles}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => removeNumber(num.id)}
+                    disabled={isRunning}
+                    className="text-red-400 hover:text-red-300 disabled:opacity-50"
+                  >
+                    <Trash2 className="w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Activity Logs */}
+        <div className="bg-black/40 backdrop-blur-md border border-red-500/30 rounded-xl p-6">
+          <h2 className="text-xl font-bold mb-4">Journal d'ActivitÃ©</h2>
+          <div className="space-y-2 max-h-64 overflow-y-auto">
+            {logs.length === 0 ? (
+              <p className="text-gray-400 text-center py-4">Aucune activitÃ©</p>
+            ) : (
+              logs.map(log => (
+                <div key={log.id} className="text-sm bg-gray-800/30 rounded p-2">
+                  <span className="text-gray-500 text-xs">
+                    {new Date(log.timestamp).toLocaleTimeString()}
+                  </span>
+                  {' - '}
+                  <span className={
+                    log.type === 'success' ? 'text-green-400' :
+                    log.type === 'error' ? 'text-red-400' : 'text-gray-300'
+                  }>
+                    {log.message}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Confirmation Modal */}
+      {showConfirm && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-gray-900 border-2 border-red-500 rounded-xl p-6 max-w-md w-full">
+            <h3 className="text-xl font-bold mb-4 text-red-500">âš ï¸ Confirmation Requise</h3>
+            <p className="text-gray-300 mb-6">
+              Vous allez lancer <strong>{cycleCount} cycles</strong> de blocage/dÃ©blocage sur <strong>{numbers.length} numÃ©ro(s)</strong>.
+              Cette action est destinÃ©e Ã  la protection contre le spam et le harcÃ¨lement.
+            </p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="flex-1 bg-gray-700 hover:bg-gray-600 py-2 rounded-lg transition"
+              >
+                Annuler
+              </button>
+              <button
+                onClick={executeBlockingSequence}
+                className="flex-1 bg-red-600 hover:bg-red-700 py-2 rounded-lg font-bold transition"
+              >
+                Confirmer
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <footer className="bg-black/50 border-t border-red-500/30 mt-12 py-6">
+        <div className="max-w-7xl mx-auto px-4 text-center text-sm text-gray-400 space-y-2">
+          <p>Â© 2026 Brutality B13 - Protection Anti-Spam AutomatisÃ©e</p>
+          <p>Utilisation strictement dÃ©fensive et personnelle â€¢ Respect de la vie privÃ©e</p>
+        </div>
+      </footer>
+    </div>
+  );
